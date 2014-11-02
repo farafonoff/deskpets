@@ -54,7 +54,11 @@ Cpets3Dlg::Cpets3Dlg(CWnd* pParent /*=NULL*/)
 
 void Cpets3Dlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+    CDialog::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_CHECK1, cbFlip);
+    DDX_Control(pDX, IDC_RADIO1, rbA);
+    DDX_Control(pDX, IDC_RADIO2, rbB);
+    DDX_Control(pDX, IDC_RADIO3, rbC);
 }
 
 BEGIN_MESSAGE_MAP(Cpets3Dlg, CDialog)
@@ -63,6 +67,10 @@ BEGIN_MESSAGE_MAP(Cpets3Dlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
     ON_WM_KEYDOWN()
+    ON_BN_CLICKED(IDC_CHECK1, &Cpets3Dlg::OnBnClickedCheck1)
+    ON_BN_CLICKED(IDC_RADIO1, &Cpets3Dlg::OnBnClickedRadio1)
+    ON_BN_CLICKED(IDC_RADIO2, &Cpets3Dlg::OnBnClickedRadio2)
+    ON_BN_CLICKED(IDC_RADIO3, &Cpets3Dlg::OnBnClickedRadio3)
 END_MESSAGE_MAP()
 
 
@@ -70,7 +78,10 @@ END_MESSAGE_MAP()
 
 CString type("carbot");
 CString num("1");
-CString path("C:\\carbot\\");
+CString path("wave");
+CString flip("flip");
+CString ext(".wav");
+CString sep("\\");
 //CString path("");
 char* dfire;
 char* dfire2;
@@ -87,8 +98,16 @@ char* loadFile(CString fname) {
     CloseHandle(file);
     return data;
 }
+bool isFlip;
+
 char* loadCommand(char* cs) {
-    return loadFile(path+CString(cs)+type+num+CString("Flip.wav"));
+    CString rfile;
+    if (isFlip) {
+        rfile = path+sep+type+flip+sep+CString(cs)+type+num+flip+ext;
+    } else {
+        rfile = path+sep+type+sep+CString(cs)+type+num+ext;
+    }
+    return loadFile(rfile);
 }
 void loadData() {
     dfire = loadCommand("FIRE");
@@ -255,81 +274,6 @@ int state(int newState) {
 DWORD minstep = 10;
 int shift = 0;
 
-/*
-
-BOOL Cpets3Dlg::PreTranslateMessage(MSG * msg) {
-    if (msg->message==WM_KEYDOWN) {
-        int rpt = msg->lParam&(1<<30);
-        if (rpt==1) {
-            return TRUE;
-        }
-        if (msg->wParam==0x5A) {
-            playSnd(dfire);
-        }
-        if (msg->wParam==0x58) {
-            playSnd(dfire2);
-        }
-        if (msg->wParam==0x43) {
-            playSnd(dboost);
-        }
-        if (msg->wParam==VK_SHIFT) {
-            shift = 1;
-        }
-        if (msg->wParam==VK_SPACE) {
-            state(ST_STOP);
-        }
-        if (msg->wParam==VK_UP) {
-            state(ST_FW);            
-        }
-        if (msg->wParam==VK_DOWN) {
-            state(ST_BACK);            
-        }
-        if (msg->wParam==VK_LEFT) {
-            state(ST_LEFT);
-            if (shift) {
-                Sleep(minstep);
-                state(ST_STOP);
-            }
-        }
-        if (msg->wParam==VK_RIGHT) {
-            state(ST_RIGHT);  
-            if (shift) {
-                Sleep(minstep);
-                state(ST_STOP);
-            }
-        }
-        return TRUE;
-    }
-    if (msg->message==WM_KEYUP) {
-        if (msg->wParam==VK_SHIFT) {
-            shift = 0;
-        }
-        if (msg->wParam==VK_UP) {
-            if (engState==ST_FW) {
-                state(ST_STOP);            
-            }
-        }
-        if (msg->wParam==VK_DOWN) {
-            if (engState==ST_BACK) {
-                state(ST_STOP);            
-            }
-        }
-        if (msg->wParam==VK_LEFT) {
-            if (engState==ST_LEFT) {
-                state(ST_STOP);            
-            }
-        }
-        if (msg->wParam==VK_RIGHT) {
-            if (engState==ST_RIGHT) {
-                state(ST_STOP);            
-            }
-        }
-        return TRUE;
-    }
-    return CDialog::PreTranslateMessage(msg);
-}
-
-*/
 bool isUp;
 bool isDown;
 bool isLeft;
@@ -426,4 +370,31 @@ BOOL Cpets3Dlg::PreTranslateMessage(MSG * msg) {
         return TRUE;
     }
     return CDialog::PreTranslateMessage(msg);
+}
+
+
+
+void Cpets3Dlg::OnBnClickedCheck1()
+{
+    isFlip = cbFlip.GetCheck();
+}
+
+void Cpets3Dlg::OnBnClickedRadio1()
+{
+    // TODO: Add your control notification handler code here
+}
+
+void Cpets3Dlg::OnBnClickedRadio2()
+{
+    // TODO: Add your control notification handler code here
+}
+
+void Cpets3Dlg::OnBnClickedRadio3()
+{
+    // TODO: Add your control notification handler code here
+}
+
+
+void updateSoundLib() {
+    loadData();
 }

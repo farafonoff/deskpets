@@ -2,6 +2,7 @@
 //
 
 #pragma once
+#include "afxwin.h"
 
 
 // Cpets3Dlg dialog
@@ -29,6 +30,17 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-    afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
     BOOL PreTranslateMessage(MSG*);
+    void updateSoundLib();
+
+    afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+    afx_msg void OnBnClickedCheck1();
+    afx_msg void OnBnClickedRadio1();
+    afx_msg void OnBnClickedRadio2();
+    afx_msg void OnBnClickedRadio3();
+    CButton cbFlip;
+    CButton rbA;
+    CButton rbB;
+    CButton rbC;
+
 };
